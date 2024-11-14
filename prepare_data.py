@@ -1,3 +1,4 @@
+import os
 from langchain_community.document_loaders import Docx2txtLoader
 from langchain_core.documents import Document
 import pickle
@@ -29,41 +30,65 @@ def load_docx(file_path) -> List[Document]:
     return [Document(page_content=c) for c in content]
 
 
-def split_text_by_line(text: str) -> List[Document]:
-    """Split text into chunks by line, each Document contains one line."""
-    lines = text.split("\n")
-    result = []
-    for line in lines:
-        line = line.strip()
-        if line:  
-            result.append(Document(page_content=line))
-    return result
-
-
 def save_2_pickle(documents: List[Document], file_path: str):
     """Save the list of Document objects to a pickle file."""
     with open(file_path, "wb") as file:
         pickle.dump(documents, file)
 
 
+def prepare(directory_path: str, file_destination_path: str):
+    """Prepare and save data from all .docx files in a directory into a single pickle."""
+    all_documents = []
+    
+    # Iterate over all files in the directory
+    for filename in os.listdir(directory_path):
+        if filename.endswith(".docx"):
+            file_path = os.path.join(directory_path, filename)
+            documents = load_docx(file_path)
+            all_documents.extend(documents)
+            print(f"Loaded data from {file_path}")
+    
+    # Save all collected documents into a single pickle file
+    save_2_pickle(all_documents, file_destination_path)
+    print(f"Saved to {file_destination_path}")
 def load_data(file_path: str) -> List[Document]:
     with open(file_path, "rb") as file:
         documents = pickle.load(file)
     return documents
 
-
-def prepare(file_path: str, file_destination_path: str):
-    """Prepare and save data from .docx file into a pickle."""
-    documents = load_docx(file_path)
-    print(f"Loaded data from {file_path}")
-    save_2_pickle(documents, file_destination_path)
-    print(f"Saved to {file_destination_path}")
-
-
 if __name__ == "__main__":
-    
     prepare(
-        "./data/Bộ luật-91-2015-QH13.docx",
+        "./data/dan_su/",
         "./datapickle/dan_su.pkl"
     )
-   
+    prepare(
+        "./data/hien_phap/",
+        "./datapickle/hien_phap.pkl"
+    )
+    prepare(
+        "./data/hinh_su/",
+        "./datapickle/hinh_su.pkl"
+    )
+    prepare(
+        "./data/dat_dai/",
+        "./datapickle/dat_dai.pkl"
+    )
+    prepare(
+        "./data/hien_phap/",
+        "./datapickle/hien_phap.pkl"
+    )
+    prepare(
+        "./data/hon_nhan_gia_dinh/",
+        "./datapickle/hon_nhan_gia_dinh.pkl"
+    )
+    prepare(
+        "./data/lao_dong/",
+        "./datapickle/lao_dong.pkl"
+    )
+    prepare(
+        "./data/tai_chinh/",
+        "./datapickle/tai_chinh.pkl"
+    )
+
+
+    

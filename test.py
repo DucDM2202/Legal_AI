@@ -11,8 +11,8 @@ from langchain_openai import ChatOpenAI
 load_dotenv()
 
 embedding = get_openai_embedding(api_key="")
-retrievers = get_retriever(source="dan_su", embedding=embedding)
+retrievers = get_retriever(source="vectordata", embedding=embedding)
 # gg_llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0)
 gpt_llm = ChatOpenAI(temperature=0, openai_api_key="")
 basicrag = BasicRAG(retrievers, gpt_llm)
-print(basicrag.answer(question="Trong trường hợp hai bên ký hợp đồng vay tài sản mà không có văn bản, chỉ bằng lời nói, nếu bên vay không trả tiền đúng hạn thì bên cho vay có quyền khởi kiện đòi nợ không?"))
+print(basicrag.answer(question="Tôi cho bạn A vay với số tiền 10 triệu nhưng không kí hợp đồng và bạn A có hứa trả lại sau 3 tháng nhưng đến nay là 1 năm tôi chưa nhận được tiền, tôi có giục thì bạn nhất quyết không trả, tôi nên giải quyết như thế nào?"))
